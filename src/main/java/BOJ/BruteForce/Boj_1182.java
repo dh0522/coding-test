@@ -1,4 +1,4 @@
-package BOJ;
+package BOJ.BruteForce;
 import java.util.*;
 import java.io.*;
 public class Boj_1182 {
