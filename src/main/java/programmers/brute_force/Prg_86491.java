@@ -6,6 +6,7 @@ public class Prg_86491 {
         Prg_86491 sol = new Prg_86491();
 
         System.out.println(sol.solution(new int[][] { {60, 50},{30,70},{60,30},{80,40} }));
+        System.out.println(sol.solution(new int[][] { {10, 7}, {12, 3}, {8, 15}, {14, 7}, {5, 15} }));
     }
 
     private int solution( int[][] sizes ){
