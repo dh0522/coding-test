@@ -1,4 +1,4 @@
-package programmers;
+package programmers.exhaustive_search;
 
 public class Prg_87946 {
     public static void main(String[] args) {
