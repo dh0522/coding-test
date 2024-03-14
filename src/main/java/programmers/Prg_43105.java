@@ -8,27 +8,40 @@ public class Prg_43105 {
         int[][] triangle = {{ 7}, {3, 8}, {8, 1, 0}, {2, 7, 4, 4}, {4, 5, 2, 6, 5 }};
         System.out.println(sol.solution(triangle));
     }
-    int max = Integer.MIN_VALUE;
-    int[][] arr ;
-    private int solution( int[][] triangle ){
-
-        int sum = triangle[0][0]; // 얜 항상 백퍼임
-        findMax( 1 , sum , 0 ,0 , triangle );
+    public int solution(int[][] triangle) {
 
 
-        return max;
-    }
-    public void findMax( int depth , int sum, int x, int y, int[][] triangle ){
-
-        if( depth == triangle.length ){
-            if( max < sum )
-                max = sum;
-            return;
-        }
+         int[][] dp =  new int[triangle.length][triangle.length];
+         dp[0][0] = triangle[0][0];
 
 
-        findMax( depth + 1, sum + triangle[x+1][y+1] , x+1, y+1 , triangle );
-        findMax( depth+1, sum + triangle[x+1][y] , x+1 , y , triangle );
+         for( int i = 0; i < triangle.length; i++ ){
 
-    }
-}
+             for( int j =0 ; j< triangle[i].length; j++ ) {
+
+                 if (i == 0 && j == 0) {
+                     dp[i][j] = triangle[i][j];
+                     continue;
+                 }
+                 if (j == 0) {
+                     dp[i][j] = triangle[i][j] + dp[i-1][j];
+                     continue;
+                 }
+                 if (j == i) {
+
+                     dp[i][j] = triangle[i][j] + dp[i - 1][j - 1];
+                     continue;
+                 }
+
+                 dp[i][j] = Math.max( triangle[i][j] + dp[i-1][j-1] , triangle[i][j] + dp[i-1][j] );
+
+             }
+         }
+         int answer = 0;
+         for( int i = 0; i <triangle.length ; i++ ){
+
+             answer = Math.max(answer, dp[triangle.length-1][i] );
+         }
+
+         return answer;
+    }}
