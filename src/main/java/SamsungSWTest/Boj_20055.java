@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Boj_20055 {
-	static int[] A;
-	static boolean[] visited ;
+	static private int[] A;
+	static private boolean[] visited ;
 
 	public static void main(String[] args) throws IOException {
 
@@ -52,7 +52,7 @@ public class Boj_20055 {
 
 		System.out.println( answer );
 	}
-	public static void beltRotation(int n){
+	private static void beltRotation(int n){
 
 		int temp = A[n-1];
 		for( int i = n-2; i >= 0 ; i-- ){
@@ -69,7 +69,7 @@ public class Boj_20055 {
 
 	}
 
-	public static boolean isNumber( int k ){
+	private static boolean isNumber( int k ){
 
 		int num = 0;
 		for( int i = 0; i < A.length ;i++ ){
