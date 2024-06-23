@@ -11,15 +11,17 @@ public class Prg_49189 {
         System.out.println(sol.solution(6, vertex));
 
     }
-    private int solution( int n , int[][] edge ) {
+    static boolean[] visited;
+    static int[] depth;
+    private int solution(int n, int[][] edge) {
 
         ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        visited = new boolean[n+1];
+        depth = new int[n+1];
+        for( int i =0 ; i<=n ; i++ )
+            graph.add(new ArrayList<>());
 
-        for( int i = 0; i<= n; i++ )
-            graph.add( new ArrayList<>() );
-
-        for( int i  =0 ;i < edge.length; i++ ){
-
+        for( int i =0; i< edge.length; i++ ){
             int x = edge[i][0];
             int y = edge[i][1];
 
@@ -27,49 +29,51 @@ public class Prg_49189 {
             graph.get(y).add(x);
         }
 
-        int answer = bfs( graph, n );
+        int answer = bfs(1 , graph );
+
         return answer;
     }
-    private int bfs( ArrayList<ArrayList<Integer>> graph, int n){
-
-        boolean[] visited = new boolean[n+1];
-        int[] depth = new int[n+1];
-        int max = 0;
+    private static int bfs( int start , ArrayList<ArrayList<Integer>> graph ){
 
         Queue<Integer> q = new LinkedList<>();
-        q.add(1);
-        visited[1] = true;
+
+        q.add( start );
+        visited[ start ] = true;
         depth[1] = 1;
 
+        int max = 0;
+        int answer =0;
+
         while( !q.isEmpty() ){
+
             int now = q.poll();
 
-            for( int i = 0; i< graph.get(now).size(); i++ ){
+            for( int i =0 ;i < graph.get(now).size(); i++ ){
 
                 int next = graph.get(now).get(i);
 
                 if( visited[next] )
                     continue;
 
-                q.add(next);
-                depth[next] = depth[now] + 1;
                 visited[next] = true;
-                max = Math.max( max , depth[next] );
+
+
+                depth[next] = depth[now] +1;
+                max = Math.max( depth[next] , max );
+                q.add( next );
+
             }
         }
 
-        int count = 0;
+        for( int count : depth ){
 
-        for( int tmp : depth ){
-            if (tmp == max)
-                count++;
+            if(count == max )
+                answer++;
         }
 
-        return count;
+        return answer;
     }
 }
-
-
 
 
 
