@@ -44,7 +44,7 @@ public class Boj_7562 {
 		System.out.println(sb);
 
 	}
-	public static int bfs( int[] start , int[] goal ){
+	private static int bfs( int[] start , int[] goal ){
 
 		Queue<int[]> q = new LinkedList<>();
 		q.add(start);
