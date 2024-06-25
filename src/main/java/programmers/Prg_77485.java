@@ -18,23 +18,19 @@ public class Prg_77485 {
 	}
 
 	static int[][] arr;
-	static int[][] temp;
+
 	static int[] answer;
 	public int[] solution(int rows, int columns, int[][] queries) {
-		answer = new int[queries.length];
 
+		answer = new int[queries.length];
 		arr = new int[rows][columns];
 		int num = 1;
+
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++)
 				arr[i][j] = num++;
 		}
 
-		temp = new int[arr.length][arr[0].length];
-
-		for (int i = 0; i < arr.length; i++) {
-			temp[i] = arr[i].clone();
-		}
 
 		for (int i = 0; i < queries.length; i++) {
 
@@ -44,62 +40,43 @@ public class Prg_77485 {
 			int y2 = queries[i][3] - 1;
 
 
-			turn(x1, y1, x2, y2 ,i);
+			turn(x1, x2, y1, y2 ,i);
 
 		}
 
 		return answer;
 	}
+	private static void turn(  int x1 ,int x2 , int y1 , int y2 , int idx ){
 
-	private static void turn(int x1, int y1, int x2, int y2, int idx) {
+		int last = arr[x1][y1];
+		int min = last;
 
-		int min = Integer.MAX_VALUE;
-
-
-		first(temp,x1,x2,y1,y2);
-
-		for (int i = x1; i <= x2; i++) {
-			for (int j = y1; j <= y2; j++) {
-
-				if (i != x1 && i != x2 && j != y1 && j != y2)
-					continue;
-
-				min = Math.min(min, arr[i][j]);
-
-			}
-		}
-		answer[idx] = min;
-
-
-	}
-	private static void first( int[][] temp , int x1 ,int x2 , int y1 , int y2){
-
-		int last = temp[x1][y2];
-
-		for( int i = y2; i >= y1+1 ; i-- ){
-			temp[x1][i] = temp[x1][i-1] ;
-
-		}
-		temp[x1][y1] = temp[x1+1][y1];
-
-		for( int i = x2; i > x1+1; i -- ){
-			temp[i][y2] = temp[i-1][y2];
-		}
-		temp[x1+1][y2] = last;
-
-
-		for( int i = y1; i < y2; i++ ){
-			temp[x2][i] = temp[x2][i+1];
-		}
-		temp[x2][y2-1] = arr[x2][y2];
 
 		for( int i = x1; i < x2; i++ ){
-			temp[i][y1] = temp[i+1][y1];
+			arr[i][y1] = arr[i+1][y1];
+			min = Math.min( min, arr[i][y1]);
 		}
-		temp[x2-1][y1] = arr[x2][y1];
 
+		for( int i = y1; i < y2; i++ ){
+			arr[x2][i] = arr[x2][i+1];
+			min = Math.min( min, arr[x2][i]);
 
-		for( int i =0; i < arr.length; i++ )
-			arr[i] = temp[i].clone();
+		}
+
+		for( int i = x2; i > x1; i -- ){
+			arr[i][y2] = arr[i-1][y2];
+			min = Math.min( min, arr[i][y2]);
+
+		}
+		for( int i = y2; i > y1 ; i-- ){
+			arr[x1][i] = arr[x1][i-1] ;
+			min = Math.min( min, arr[x1][i]);
+
+		}
+
+		arr[x1][y1+1] = last;
+
+		answer[idx] = min;
+
 	}
 }
