@@ -7,7 +7,6 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Boj_1697 {
-	static int answer = Integer.MAX_VALUE;
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -16,21 +15,20 @@ public class Boj_1697 {
 		int n = Integer.parseInt(st.nextToken());
 		int k = Integer.parseInt(st.nextToken());
 
-
-		bfs( n, k , 0);
+		bfs( n, k );
 	}
-	private static void bfs( int n , int k , int depth ){
+	private static void bfs( int n , int k ){
 
 		Queue<Integer> q = new LinkedList<>();
 		q.add( n );
-		int[] visited = new int[100000];
+		int[] visited = new int[100001];
 		visited[n] = 1;
 
 		while( !q.isEmpty()) {
 
 			int now = q.poll();
 			if( now == k ){
-				System.out.println(visited[now]-1);
+				System.out.println(visited[now] -1 );
 				return;
 			}
 
@@ -43,7 +41,7 @@ public class Boj_1697 {
 					next = now-1;
 				else next = now*2;
 
-				if(visited[next] !=0 ||next >= visited.length || 0 > next )
+				if(  next >= visited.length || next < 0  || visited[next] != 0 )
 					continue;
 
 				visited[next] = visited[now] + 1;
