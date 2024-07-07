@@ -7,63 +7,57 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Boj_5014 {
-	static int f,s,g,u,d;
-	static int[] visited;
-	static int answer = -1;
 	public static void main(String[] args) throws Exception {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		f = Integer.parseInt(st.nextToken());
-		s = Integer.parseInt(st.nextToken());
-		g = Integer.parseInt(st.nextToken());
-		u = Integer.parseInt(st.nextToken());
-		d = Integer.parseInt(st.nextToken());
+		int f = Integer.parseInt(st.nextToken());
+		int s = Integer.parseInt(st.nextToken());
+		int g = Integer.parseInt(st.nextToken());
+		int u = Integer.parseInt(st.nextToken());
+		int d = Integer.parseInt(st.nextToken());
+		/**
+		 *
+		 *   건물 층 수 : f 층
+		 *   강호가 있는 층 : S층 -> G층 가고싶음
+		 *   u : 위로 갈 수 있는 층 수
+		 *   d : 밑으로 갈 수 있는 층 수
+		 */
 
-		visited = new int[f+1];
+		int[] building = new int[f+1];
+		int[] updown = {u,-d};
 
-		bfs( s );
-
-		if( answer == -1 )
-			System.out.println("use the stairs");
-		else
-			System.out.println(answer-1);
-	}
-
-	private static void bfs( int now ){
+		building[s] = 1;
 
 		Queue<Integer> q = new LinkedList<>();
-		q.add(now);
-		visited[now] = 1;
+		q.add( s );
 
+		int answer = -1;
 
-		while( !q.isEmpty() ){
+		while(!q.isEmpty()){
 
-			now = q.poll();
+			int now = q.poll();
 
-			if( now == g ){
-				answer = visited[now];
-				return;
+			if( now == g ) {
+				answer = building[now] -1;
+				break;
 			}
 
-			if( isPossible(now+u ) ){;
-				visited[now+u ]= visited[now]+1 ;
-				q.add(now + u );
-			}
-			if ( isPossible(now-d) ) {
-				visited[now -d]= visited[now]+1 ;
-				q.add(now-d);
+			for( int i = 0 ; i <2 ; i++ ){
+				int next = now + updown[i];
+				if( next <= 0 || f < next ||building[next] != 0  )
+					continue;
+
+				building[next] = building[now] + 1;
+				q.add(next);
 			}
 
 		}
 
+		if( answer == -1 )
+			System.out.println("use the stairs");
+		else
+			System.out.println(answer);
 
-	}
-	public static boolean isPossible( int next ){
-
-		if( next <=0 || next > f || visited[next] != 0 )
-			return false;
-		return true;
 	}
 }
