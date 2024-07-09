@@ -1,71 +1,92 @@
 package BOJ;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Boj_1018 {
-
 	static int answer = Integer.MAX_VALUE;
-	public static void main(String[] args) throws IOException {
+	static String[] string = {"WBWBWBWB","BWBWBWBW"};
+	public static void main(String[] args) throws Exception {
 
-		BufferedReader br = new BufferedReader( new InputStreamReader(System.in));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
 		int n = Integer.parseInt(st.nextToken());
 		int m = Integer.parseInt(st.nextToken());
 
-		boolean[][] board = new boolean[n][m];
-		for( int i = 0 ; i < n; i++ ){
-			String temp = br.readLine();
-			for( int j = 0 ;j < m; j++ ){
-				if( temp.charAt(j) == 'B' )
-					board[i][j] = true;
-				else board[i][j] = false;
-			}
+		String[] board = new String[n];
 
+		for( int i = 0 ; i < n ; i++ ){
+			board[i] = br.readLine();
 		}
 
-		int garo = n-7;
-		int sero = m-7;
-
-		for(int i = 0; i< garo; i++ ){
-			for( int j = 0 ; j < sero ; j++ )
-				search( board , i , j );
+		for( int i = 0; i <= n-8; i++ ){
+			for( int j= 0; j <= m-8; j ++ ){
+				calc( i , j , board );
+			}
 		}
 		System.out.println(answer);
 	}
-	public static void search( boolean [][] board , int garo , int sero ){
+	private static void calc( int startX, int startY, String[] board ){
 
-		boolean first = board[garo][sero];
-		int num = 0;
-
-		for( int i = garo; i < garo+8; i++ ){
-			for( int j = sero; j < sero+8; j++ ){
-
-				if( board[i][j] != first )
-					num++;
-
-				first = !first;
+		int diff = 0;
+		// 0,0 == B
+		for( int i = startX; i < startX + 8 ; i++ ){
+			if( i % 2 == 0 ){
+				String temp = board[i].substring(startY, startY+8);
+				diff += compare(temp , string[1] );
 			}
-			first = !first;
+			else{
+				String temp = board[i].substring(startY, startY+8);
+				diff += compare(temp, string[0] );
 
-		}
-		num = 0;
-		first = !board[garo][sero];
-		for( int i = garo; i < garo+8; i++ ){
-			for( int j = sero; j < sero+8; j++ ){
-
-				if( board[i][j] != first )
-					num++;
-
-				first = !first;
 			}
-			first = !first;
-
 		}
-		answer = Math.min( answer , num );
+		answer = Math.min( answer , diff );
+
+		diff = 0;
+
+		for( int i = startX; i < startX + 8 ; i++ ){
+			if( i % 2 == 0 ){
+				String temp = board[i].substring(startY, startY+8);
+				diff += compare(temp , string[0] );
+			}
+			else{
+				String temp = board[i].substring(startY, startY+8);
+				diff += compare(temp, string[1] );
+
+
+			}
+		}
+		answer= Math.min( answer , diff );
 
 	}
+	private static int compare( String first ,String second ){
+		int num = 0 ;
+		for( int i = 0 ;i < 8; i++ ){
+			if( first.charAt(i) != second.charAt(i) )
+				num++;
+		}
+		return num;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
