@@ -7,35 +7,33 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Boj_2206 {
-	static int[][] map;
-	static int[] dx = {1,0,-1,0};
-	static int[] dy = {0,1,0,-1};
-	static int n,m;
 	static int answer = -1;
-	public static void main(String[] args) throws Exception {
-
+	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		map = new int[n][m];
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
 
-		for( int i = 0 ; i < n ; i++ ){
+		int[][][] map = new int[2][n][m];
+		for( int i = 0 ; i < n ;i ++ ){
 			String str = br.readLine();
-			for( int j = 0 ;j < m ;j ++ ){
-				map[i][j] = Integer.parseInt( str.charAt(j)+"" );
+			for( int j = 0 ; j < m; j++ ){
+				map[0][i][j] = Integer.parseInt( str.charAt(j)+"" );
 			}
 		}
 
-		bfs();
-		System.out.println(answer);
 
+		bfs( map , n , m );
+		System.out.println(answer);
 	}
-	private static void bfs(){
+	private static void bfs( int[][][] map , int n , int m ){
+
+		int[] dx = {1,0,-1,0};
+		int[] dy = {0,1,0,-1};
 
 		Queue<int[]> q = new LinkedList<>();
-		q.add( new int[]{0,0,0} );
+		q.add(new int[]{0,0,0});
 
 		int[][][] visited = new int[2][n][m];
 		visited[0][0][0] = 1;
@@ -43,47 +41,38 @@ public class Boj_2206 {
 		while( !q.isEmpty() ){
 
 			int[] now = q.poll();
-
-			int wall = now[0];
+			int depth = now[0];
 			int x = now[1];
 			int y = now[2];
 
 			if( x == n-1 && y == m-1 ){
-				answer = visited[wall][x][y];
+				answer = visited[depth][x][y];
 				return;
 			}
 
-			for( int i = 0 ; i < 4; i++ ){
-
+			for( int i = 0; i < 4; i++ ){
 				int nx = x + dx[i];
 				int ny = y + dy[i];
 
-				if( nx < 0 || ny < 0 || nx >= n || ny >= m )
+				if( nx < 0 || ny < 0 || nx >=n || ny >=m )
 					continue;
 
-				// 벽이 없을때
-				if( map[nx][ny] == 0 ){
-					if( visited[wall][nx][ny] == 0 ) {
-						visited[wall][nx][ny] = visited[wall][x][y] + 1;
-						q.add(new int[] {wall, nx, ny});
-					}
-				}
-				// 벽이 있을 때
-				else {
-					if( wall == 0 ){
-						if( visited[1][nx][ny] == 0 ){
-							visited[1][nx][ny] = visited[wall][x][y] + 1;
-							q.add(new int[]{1,nx,ny});
-						}
+				if( visited[depth][nx][ny] != 0 )
+					continue;
 
-					}
+				if( depth == 1 && map[0][nx][ny] == 1 )
+					continue;
 
+				if( map[0][nx][ny] == 1 ){
+					q.add(new int[]{ 1, nx, ny });
+					visited[1][nx][ny] = visited[depth][x][y] + 1;
+					continue;
 				}
 
+				q.add(new int[]{depth, nx, ny });
+				visited[depth][nx][ny] = visited[depth][x][y] + 1;
 			}
-
 		}
 		return;
 	}
-
 }
