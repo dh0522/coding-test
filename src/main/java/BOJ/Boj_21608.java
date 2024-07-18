@@ -14,31 +14,27 @@ public class Boj_21608 {
 	static int n;
 	static int[] dx = {1,0,-1,0};
 	static int[] dy = {0,1,0,-1};
+	static HashMap<Integer ,List<Integer> > hm = new HashMap<>();
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
 		room = new int[n][n];
 
-		HashMap<Integer , List<Integer> > hm = new HashMap<>();
-
-
 		StringTokenizer st;
-
 		for( int i =0 ; i < n*n ; i++ ) {
 
 			st = new StringTokenizer(br.readLine());
 			int now = Integer.parseInt(st.nextToken());
-
 			List<Integer> list = new ArrayList<>();
 			for (int j = 0; j < 4; j++) {
 				list.add(Integer.parseInt(st.nextToken()));
 			}
 
 			hm.put( now , list );
-			search(now, list);
-
+			bestSearch(now,list);
 		}
+
 		int answer = 0;
 		for( int i = 0 ; i < n ; i++ ){
 			for( int j = 0; j <n ;j++ ){
@@ -64,31 +60,22 @@ public class Boj_21608 {
 		System.out.println(answer);
 
 	}
+	static private void bestSearch( int now , List<Integer> list ){
 
-	static class Point{
-		int x,y,adjNum,zeroNum;
-		public Point( int x, int y , int adjNum ,int zeroNum ){
-			this.x = x;
-			this.y = y;
-			this.adjNum = adjNum;
-			this.zeroNum = zeroNum;
-		}
-	}
+		int maxFriends = 0;
+		int maxZero = 0;
+		int locX = Integer.MAX_VALUE ;
+		int locY = Integer.MAX_VALUE;
 
-	static private void search( int now,  List<Integer> list ){
-		List<Point> adjList = new ArrayList<>();
-
-		for( int i= 0 ;i < n ; i++ ){
-			for( int j = 0 ; j< n ;j ++ ){
-
+		for( int i = 0 ; i < n ;i++ ){
+			for(int j =0 ;j <n ;j ++ ){
 				if( room[i][j] != 0 )
 					continue;
 
-				int adjNum = 0;
-				int zeroNum = 0;
+				int friend = 0;
+				int zero = 0;
 
-				for( int d =0 ; d < 4; d++ ){
-
+				for( int d=0; d <4; d++ ){
 					int nx = i + dx[d];
 					int ny = j + dy[d];
 
@@ -96,65 +83,25 @@ public class Boj_21608 {
 						continue;
 
 					if( list.contains( room[nx][ny] ) ){
-						adjNum++;
+						friend++;
 					}
 					if( room[nx][ny] == 0 )
-						zeroNum++;
+						zero++;
 				}
 
-				if( adjList.size() == 0 ){
-					adjList.add(new Point(i,j,adjNum, zeroNum ));
-				}else if( adjList.get(0).adjNum < adjNum ){
-					adjList.clear();
-					adjList.add( new Point(i,j,adjNum , zeroNum ) );
-				}else if( adjList.get(0).adjNum == adjNum ){
-					adjList.add(new Point(i,j,adjNum, zeroNum ));
+				if( friend > maxFriends || (friend == maxFriends && zero > maxZero) ||
+					(friend == maxFriends && zero == maxZero && i < locX) || (friend == maxFriends && zero == maxZero && i == locX && j < locY ) ){
+					maxFriends = friend;
+					maxZero = zero;
+					locX = i;
+					locY = j;
 				}
 
 			}
 		}
 
-		// 1을 만족하는 칸이 하나
-		if( adjList.size() == 1 ){
-			Point point = adjList.get(0);
-			room[point.x][point.y] = now;
-			return;
-		}
-
-		// zeroNum 판단
-		List<Point> tmpList = new ArrayList<>();
-		int max = 0;
-		for( int i =0 ;i < adjList.size(); i++ ){
-			Point point = adjList.get(i);
-			if( max < point.zeroNum ){
-				tmpList.clear();
-				tmpList.add(point);
-				max = point.zeroNum;
-			}else if( max == point.zeroNum ){
-				tmpList.add(point);
-			}
-		}
-
-
-
-		if( tmpList.size() == 1 ){
-			Point point = tmpList.get(0);
-			room[point.x][point.y] = now;
-			return;
-		}
-
-		Collections.sort(tmpList, new Comparator<Point>() {
-			@Override
-			public int compare(Point p1, Point p2) {
-				if (p1.x != p2.x) {
-					return p1.x - p2.x; // x 값이 작은 순으로 정렬
-				} else {
-					return p1.y - p2.y; // x 값이 같으면 y 값이 작은 순으로 정렬
-				}
-			}
-		});
-		Point point = tmpList.get(0);
-		room[point.x][point.y] = now;
+		room[locX][locY] = now;
 		return;
+
 	}
 }
