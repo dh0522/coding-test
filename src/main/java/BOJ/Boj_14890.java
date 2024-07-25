@@ -2,9 +2,6 @@ package BOJ;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Boj_14890 {
@@ -28,22 +25,58 @@ public class Boj_14890 {
 		}
 
 		for( int i =0; i< n ;i++ ){
-			int min = 100;
-			int max = 0;
-			for( int j =0; j< n ;j++ ){
-				max = Math.max( arr[i][j] , max );
-				min = Math.min(arr[i][j] , min );
-			}
-			if( max == min ) {
-				answer++;
-				continue;
-			}
-			isRight( i , max );
+
+			isRow( i );
+			isColumn(i);
 		}
 
 		System.out.println(answer);
 	}
-	private static void isRight(int row,int max){
+	private static void isColumn( int column ){
+
+		boolean[] put = new boolean[n];
+
+		for( int i =0; i < n-1;i ++ ) {
+			int diff = arr[i+1][column] - arr[i][column] ;
+			if( Math.abs(diff) >= 2 )
+				return;
+			if( diff == 0 ) {
+				continue;
+			}
+			// i < i+1 : 다음 것이 더 큼
+			else if( diff == 1 ){
+
+				for( int j = i; j > i-l; j-- ){
+					if( j < 0 || j >= n )
+						return;
+					if( arr[i][column] != arr[j][column] )
+						return;
+					if( put[j] )
+						return;
+					put[j] = true;
+				}
+
+			}else if( diff == -1 ){
+				for( int j = i+1; j <= i + l; j++ ){
+					if( j < 0 || j >= n )
+						return;
+					if( arr[i+1][column] != arr[j][column] )
+						return;
+					if( put[j] )
+						return;
+					put[j] = true;
+				}
+
+				i = i+l-1;
+			}
+
+		}
+
+		answer++;
+
+
+	}
+	private static void isRow(int row){
 
 		boolean[] put = new boolean[n];
 
@@ -60,22 +93,31 @@ public class Boj_14890 {
 				for( int j = i; j > i-l; j-- ){
 					if( j < 0 || j >= n )
 						return;
-					if( arr[row][i] != arr[row][i+j] )
+					if( arr[row][i] != arr[row][j] )
 						return;
-
+					if( put[j] )
+						return;
+					put[j] = true;
 				}
 
-
 			}else if( diff == -1 ){
+				for( int j = i+1; j <= i + l; j++ ){
+					if( j < 0 || j >= n )
+						return;
+					if( arr[row][i+1] != arr[row][j] )
+						return;
+					if( put[j] )
+						return;
+					put[j] = true;
+				}
 
+				i = i+l-1;
 			}
-
-
 
 		}
 
 		answer++;
-		System.out.println("row = "+row);
+
 
 	}
 }
