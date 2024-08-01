@@ -9,127 +9,119 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Boj_20056 {
+	static int n,m;
+	static int[][] arr;
 	static int[] dx = {-1,-1,0,1,1,1,0,-1};
 	static int[] dy = {0,1,1,1,0,-1,-1,-1};
-	static int n,m;
-	static List<Ball> list = new ArrayList<>(); // fireBall list
+	static List<Ball> balls = new ArrayList<>();
 	static Queue<Ball>[][] map;
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
-
 		int k = Integer.parseInt(st.nextToken());
 
 		map = new Queue[n][n];
-		for( int i= 0; i< n; i++ ){
-			for( int j=0; j< n; j ++ ){
+		for( int i =0; i < n; i++ ){
+			for( int j=0; j <n ; j++)
 				map[i][j] = new LinkedList<>();
-			}
 		}
 
 
-		for( int i=0 ; i <m ;i++ ){
-			st = new StringTokenizer(br.readLine());
+		arr = new int[n][n];
 
-			int x = Integer.parseInt(st.nextToken())-1;
-			int y = Integer.parseInt(st.nextToken())-1;
+		for( int i = 0; i < m ; i++ ){
+			st = new StringTokenizer(br.readLine());
+			int r = Integer.parseInt(st.nextToken())-1;
+			int c = Integer.parseInt(st.nextToken())-1;
 			int m = Integer.parseInt(st.nextToken());
 			int s = Integer.parseInt(st.nextToken());
 			int d = Integer.parseInt(st.nextToken());
 
-			list.add(new Ball( x,y,m,s,d ));
+			balls.add( new Ball(r,c,m,s,d) );
 		}
 
-		while( k-- > 0 ){
+		for( int i =0; i < k ; i++ ){
 			move();
-			for(int i=0; i< n ;i++ ){
-				for( int j =0; j< n ;j++ ){
-					if( map[i][j].size() >= 2 )
-						divide(i,j);
-					else
-						map[i][j].clear();
-				}
-			}
 		}
 
-		int answer =0;
-
-		for( int i=0; i< list.size(); i++ ){
-			answer += list.get(i).w;
+		int answer = 0;
+		for( Ball ball : balls ) {
+			answer += ball.m;
 		}
 		System.out.println(answer);
 
 	}
-	private static void divide( int x , int y ) {
+	private static void second(int x, int y ) {
 
-		int weight = 0;
-		int speed = 0;
-
-		boolean direction = true;
-
-		int d = map[x][y].peek().d % 2;
 		int count = map[x][y].size();
+		int dirCount = 0;
+
+		int newM = 0;
+		int newS = 0;
 
 		while( !map[x][y].isEmpty() ){
-
 			Ball ball = map[x][y].poll();
-			weight += ball.w;
-			speed += ball.s;
+			newM += ball.m;
+			newS += ball.s;
 
-			if( (ball.d)%2 != d ){
-				direction = false;
-			}
-			list.remove(ball);
+			if( ball.d% 2 == 0 )
+				dirCount++;
+
+			balls.remove( ball );
 		}
 
-		if( direction )
-			d = 0;
-		else d = 1;
+		if( dirCount == count || dirCount == 0 ){
+			dirCount = 0;
+		}else dirCount = 1;
 
-		weight /= 5 ;
-		speed /= count ;
+		newM /= 5;
+		newS /= count;
 
-		if( weight == 0 )
+		if( newM == 0 ){
 			return;
-
-
-		for( int i = 0; i < 4; i++ ){
-			list.add( new Ball( x,y, weight,speed, d ) );
-			d+=2;
 		}
-
-
+		arr[x][y] = 4;
+		for( int j = 0; j < 4; j++ ){
+			balls.add( new Ball( x,y ,newM,newS,dirCount ) );
+			dirCount += 2;
+		}
 	}
-	private static void move( ){
+	private static void move(){
 
-		for( int i = 0; i < list.size(); i++ ){
+		for( int i =0; i < balls.size(); i++ ){
+			Ball ball = balls.get(i);
 
-			Ball ball = list.get(i);
-
-			int x = ball.x;
-			int y = ball.y;
+			int r = ball.r;
+			int c = ball.c;
 			int d = ball.d;
-			int num = ball.s%n;
+			int s = ball.s%n;
+			arr[r][c]--;
 
-			ball.x = ( x + dx[d]* num + n ) % n;
-			ball.y = ( y + dy[d]* num + n ) % n;
+			ball.r = ( r + dx[d]*s + n )%n;
+			ball.c = ( c + dy[d]*s + n )%n;
 
-			map[ball.x][ball.y].add(ball);
-
+			map[ball.r][ball.c].add( ball );
 		}
 
+		for( int i =0; i < n; i++ ){
+			for( int j=0; j < n; j++ ){
+				if( map[i][j].size()  >= 2 ) {
+					second(i,j);
+				}
+				else map[i][j].clear();
+			}
+		}
 
 	}
-
-	public static class Ball{
-		int x,y,w,s,d;
-		public Ball( int x, int y ,int w , int s , int d ){
-			this.x = x;
-			this.y = y;
-			this.w = w;
+	static class Ball{
+		int r,c,m,s,d;
+		Ball( int r , int c ,int m, int s, int d ){
+			this.r = r;
+			this.c = c;
+			this.m = m;
 			this.s = s;
 			this.d = d;
 		}
