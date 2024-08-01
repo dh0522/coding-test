@@ -13,7 +13,7 @@ public class Boj_17471 {
 	static int answer = Integer.MAX_VALUE;
 	static int[] people; // 구역의 인구수
 	static boolean[] visited;
-	static ArrayList<ArrayList<Integer>> list;
+	static ArrayList<ArrayList<Integer>> list = new ArrayList<>();
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -26,7 +26,7 @@ public class Boj_17471 {
 			people[i] = Integer.parseInt(st.nextToken());
 		}
 
-		list = new ArrayList<>();
+
 		for (int i = 0; i <= n; i++)
 			list.add(new ArrayList<>());
 
@@ -38,11 +38,7 @@ public class Boj_17471 {
 			}
 		}
 
-		/**
-		 *
-		 *  1. 두 선거구 로 나눌 수 있는지의 여부
-		 */
-		dfs(0);
+		dfs(0 );
 
 		if( answer == Integer.MAX_VALUE )
 			System.out.println(-1);
@@ -64,13 +60,13 @@ public class Boj_17471 {
 			if( first.isEmpty() || second.isEmpty() )
 				return;
 
-			if( isConnected(first ) && isConnected(second) ){
+			if( isConnected( first ) && isConnected(second) ){
 				int sum1 = 0;
 				int sum2 = 0;
-				for( int i = 1; i<= n ; i++ ){
+				for( int i = 1; i <=n ;i ++ ){
 					if( visited[i] )
 						sum1 += people[i];
-					else sum2+= people[i];
+					else sum2 += people[i];
 				}
 
 				answer = Math.min (answer , Math.abs(sum1-sum2 ) );
@@ -88,21 +84,21 @@ public class Boj_17471 {
 		Queue<Integer> q = new LinkedList<>();
 		q.add( tmp.get(0) );
 
-		visited = new boolean[n+1];
-		visited[tmp.get(0)] = true;
+		boolean[] check = new boolean[n+1];
+		check[tmp.get(0)] = true;
 
 		while( !q.isEmpty() ){
 			int now = q.poll();
 			for( int i = 0;i < list.get(now).size() ; i++ ){
 				int next = list.get(now).get(i);
-				if( !visited[next] && tmp.contains(next) ){
+				if( !check[next] && tmp.contains(next) ){
 					q.add( next );
-					visited[next] =true;
+					check[next] =true;
 				}
 			}
 		}
 		for( int i : tmp ){
-			if( !visited[i] )
+			if( !check[i] )
 				return false;
 		}
 
