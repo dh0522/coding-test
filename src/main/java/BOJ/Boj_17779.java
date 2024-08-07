@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-public class Boj_17471 {
+public class Boj_17779 {
 	static int n;
 	static int[] people;
 	static boolean[] visited;
