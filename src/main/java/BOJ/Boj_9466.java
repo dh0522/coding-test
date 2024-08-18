@@ -2,63 +2,71 @@ package BOJ;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Boj_9466 {
-	static boolean[] done;
+	static int[] student;
+	static boolean[] recur;
 	static boolean[] visited;
-	static int[] arr;
-	static int people;
+	static int answer;
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int t = Integer.parseInt(br.readLine());
+		StringTokenizer st;
 
+		int t = Integer.parseInt(br.readLine());
 		StringBuilder sb = new StringBuilder();
 
 		while( t-- > 0 ){
 
 			int n = Integer.parseInt(br.readLine());
-			people = 0;
+			answer = 0;
 
-			arr = new int[n+1];
-			done = new boolean[n+1];
+			student = new int[n+1];
+
+			recur = new boolean[n+1];
 			visited = new boolean[n+1];
-			StringTokenizer st = new StringTokenizer(br.readLine());
 
-			for( int i = 1; i <= n; i++ ){
-				arr[i] = Integer.parseInt(st.nextToken());
-				if( arr[i] == i ) {
-					done[i] = true;
-					people++;
+			st = new StringTokenizer(br.readLine());
+
+			for( int i=1; i <= n; i++ ){
+				student[i] = Integer.parseInt(st.nextToken());
+				if( i == student[i] ){
+					recur[i] = true;
+					answer++;
 				}
 			}
 
-			for( int i = 1; i <= n; i++ ){
-				if( done[i] )
+			for( int i=1; i<= n; i++ ){
+				if( recur[i] )
 					continue;
-				teamProject(i );
+				dfs( i );
 			}
-			sb.append(n-people+"\n");
-		}
 
-		System.out.print(sb);
+			sb.append(n-answer+"\n");
+
+		}
+		System.out.println(sb);
+
 	}
-	private static void teamProject( int first ){
-		if( done[first] )
+	private static void dfs( int now ){
+		/**
+		 *   recur = 이미 i->i를 선택했을 경우
+				or 이미 지나갔음
+ 		 */
+		if( recur[now] )
 			return;
-		// !done
 
-		if( visited[first] ){
-			// cycle 이라는 것
-			done[first] = true;
-			people++;
+		if( visited[now] ){
+			answer++;
+			recur[now] = true;
 		}
-		visited[first] = true;
-		teamProject(arr[first]);
 
-		done[first] = true;
-		visited[first] = false;
+		visited[now] = true;
+		dfs( student[now] );
+
+		recur[now] = true;
+		visited[now] = false;
+
 	}
 }
