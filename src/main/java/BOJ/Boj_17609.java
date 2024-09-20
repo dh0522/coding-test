@@ -7,47 +7,49 @@ public class Boj_17609 {
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
 		int t = Integer.parseInt(br.readLine());
 
-		// 회문 = 0 , 유사회문 1 , 그 외는 2
-		StringBuilder sb = new StringBuilder();
-		while ( t-- > 0) {
+		StringBuilder answer = new StringBuilder();
+
+		while( t-- > 0 ){
 
 			String now = br.readLine();
 
-			StringBuilder temp = new StringBuilder(now);
-
-			if( now.equals( temp .reverse().toString()) ) {
-				sb.append(0+"\n");
+			StringBuilder sb = new StringBuilder(now);
+			if( sb.toString().equals( sb.reverse().toString() ) ){
+				answer.append(0+"\n");
 				continue;
 			}
 
 			int left = 0;
-			int right = now.length() - 1;
-			boolean poss = false;
+			int right = now.length()-1;
 
-			while ( left < right ){
-				if( now.charAt(left) != now.charAt(right) ){
+			boolean check = false;
 
-					StringBuilder nowsb = new StringBuilder(now).deleteCharAt(left);
-					StringBuilder reverse = new StringBuilder(now).deleteCharAt(right);
+			while( left < right ){
 
+				if( now.charAt(left) != now.charAt(right) ) {
+					StringBuilder first = new StringBuilder(now).deleteCharAt(left);
+					StringBuilder second = new StringBuilder(now).deleteCharAt(right);
 
-					if( nowsb.toString().equals( nowsb.reverse().toString()) || reverse.toString().equals( reverse.reverse().toString() ) ){
-						sb.append(1+"\n");
-						poss = true;
+					if( first.toString().equals( first.reverse().toString() ) || second.toString().equals( second.reverse().toString() )){
+						answer.append(1+"\n");
+						check = true;
 					}
 					break;
 				}
-
 				left ++;
 				right--;
 			}
 
-			if( !poss )
-				sb.append( 2+"\n" );
+			if(!check ) {
+				answer.append(2 + "\n");
+			}
+
 
 		}
-		System.out.println(sb.toString());
+
+		System.out.println(answer.toString());
 	}
 }
