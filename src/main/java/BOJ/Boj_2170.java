@@ -2,6 +2,8 @@ package BOJ;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -13,8 +15,6 @@ public class Boj_2170 {
 		int n = Integer.parseInt(br.readLine());
 
 		StringTokenizer st;
-		int answer = 0;
-
 		List<int[]> list = new ArrayList<>();
 
 		for (int i=0;i <n; i++ ){
@@ -22,49 +22,36 @@ public class Boj_2170 {
 			int first = Integer.parseInt(st.nextToken());
 			int second = Integer.parseInt(st.nextToken());
 
-			boolean include = false;
-
-			for (int j = 0; j < list.size() ; j++ ){
-
-				int[] temp = list.get(j);
-
-				if ( temp[0] <= first && second <= temp[1] ){
-					include = true;
-
-				}else if( first < temp[0]  && second <= temp[1] ){
-					int diff = temp[0] - first;
-					answer += diff;
-
-					list.remove(j);
-
-					list.add( new int[]{ first, temp[1] } );
-					include = true;
-
-				}else if( temp[0] <= first && first <= temp[1] && temp[1] < second ){
-
-					int diff = second - temp[1];
-					list.remove(j);
-					list.add( new int[]{temp[0] , second });
-
-					answer += diff;
-					include = true;
-
-				}
-
-				if ( include )
-					break;
-			}
-
-			if (!include){
-
-				list.add( new int[]{first,second});
-				answer += second-first;
-			}
-
-
-
+			list.add( new int[] { first, second } );
 		}
 
+		Collections.sort(list, new Comparator<int[]>() {
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				if (o1[0] == o2[0])
+					return o2[1]-o1[1];
+				else return o1[0]-o2[0];
+			}
+		});
+
+
+		int nowX = list.get(0)[0];
+		int nowY = list.get(0)[1];
+		int answer = nowY - nowX ;
+
+		for (int i=1; i < list.size(); i++ ){
+			if ( nowX <= list.get(i)[0] && list.get(i)[1] <= nowY ){
+				continue;
+			}
+			else if( list.get(i)[0] < nowY ){
+				answer += list.get(i)[1] - nowY;
+			}else{
+				answer += list.get(i)[1] - list.get(i)[0];
+			}
+
+			nowX = list.get(i)[0];
+			nowY = list.get(i)[1];
+		}
 
 		System.out.println(answer);
 
