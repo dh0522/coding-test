@@ -38,19 +38,13 @@ public class Boj_11000 {
 		pq.add( time[0][1] );
 
 		for (int i=1; i< n; i++ ){
-
-			int endTime = pq.poll();
-
-			if ( endTime <= time[i][0] ) {
-				pq.add(time[i][1] );
-
+			if ( pq.peek() <= time[i][0] ) {
+				pq.poll();
 			}
 			else {
-				pq.add(endTime);
-				pq.add(time[i][1]);
 				answer ++;
 			}
-
+			pq.add(time[i][1]);
 		}
 		System.out.println(answer);
 	}
