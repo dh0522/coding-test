@@ -3,9 +3,7 @@ package BOJ;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -13,9 +11,7 @@ public class Boj_11967 {
 	static int n;
 	static int[] dx = {1,0,-1,0};
 	static int[] dy = {0,1,0,-1};
-	static List<Room> first = new ArrayList<>();
-	static List<Room> second = new ArrayList<>();
-
+	static ArrayList<Room>[][] arr;
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,6 +19,14 @@ public class Boj_11967 {
 
 		n = Integer.parseInt(st.nextToken());
 		int m = Integer.parseInt(st.nextToken());
+		arr = new ArrayList[n][n];
+
+
+		for ( int i =0; i <n ; i ++ ){
+			for (int j = 0; j < n; j ++ )
+				arr[i][j] = new ArrayList<>();
+		}
+
 
 		for (int i=0; i <m ; i++ ){
 			st = new StringTokenizer(br.readLine());
@@ -31,77 +35,80 @@ public class Boj_11967 {
 			int a = Integer.parseInt(st.nextToken())-1;
 			int b = Integer.parseInt(st.nextToken())-1;
 
-			first.add( new Room (x,y) );
-			second.add( new Room (a,b) );
+			arr[x][y].add( new Room(a,b) );
 		}
 
-		dfs( 0, 0 );
+		bfs();
+
 
 	}
-	private static void dfs( int x , int y  ) {
+	private static void bfs() {
 
 		Queue<Room> q = new LinkedList<>();
-		boolean[][] visited = new boolean[n][n];
+		q.add( new Room(0,0) );
 
-		q.add( new Room(x,y) );
-		visited[x][y] = true;
+		boolean[][] visited = new boolean[n][n];
+		visited[0][0] = true;
+		boolean[][] light = new boolean[n][n];
+		light[0][0] = true;
+
+		boolean[][] move = new boolean[n][n];
 
 		int answer = 1;
 
 		while( !q.isEmpty() ){
-
 			Room now = q.poll();
 
-			x = now.x;
-			y = now.y;
+			for ( int i =0; i < 4; i++ ){
+				int nx = now.x+ dx[i];
+				int ny = now.y+ dy[i];
 
-			while ( first.contains(now) ){
+				if ( nx < 0 || ny < 0 || nx >=n || ny >= n )
+					continue;
 
-				int idx = first.indexOf( now );
-				Room next = second.get( idx );
+				move[nx][ny] = true;
+			}
 
-				first.remove( idx );
-				second.remove( idx );
+			for ( int i=0; i < arr[now.x][now.y].size(); i++ ){
+				Room temp = arr[now.x][now.y].get(i);
 
-				int nx = next.x;
-				int ny = next.y;
+				//불이 꺼져있다면 -> 켜주기
+				if( !light[temp.x][temp.y] ){
+					light[temp.x][temp.y] = true;
+					answer++;
+				}
 
-				if ( visited[nx][ny] )
+				if( move[temp.x][temp.y] ){
+					q.add( temp );
+					visited[temp.x][temp.y] = true;
+				}
+			}
+			for ( int i=0; i < 4; i++ ){
+				int nx = now.x + dx[i];
+				int ny = now.y + dy[i];
+
+				if ( nx < 0 || ny < 0 || nx >=n || ny >= n )
+					continue;
+
+				if ( !light[nx][ny] || !move[nx][ny] || visited[nx][ny] )
 					continue;
 
 				visited[nx][ny] = true;
-				answer++;
-				q.add( next );
+				q.add( new Room(nx,ny) );
 
 			}
 
 		}
+		System.out.println(answer);
+		return;
 
-		System.out.println( answer );
+
 	}
-	static class Room{
+	static class Room {
 		int x,y;
 		public Room( int x , int y  ){
 			this.x = x;
 			this.y = y;
-
-		}
-
-		@Override
-		public boolean equals( Object o ){
-			if(this==o)
-				return true;
-			if ( o== null || getClass() != o.getClass() )
-				return false;
-			Room room = (Room) o;
-
-			return x == room.x && y == room.y;
-		}
-
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(x, y);
 		}
 	}
 }
