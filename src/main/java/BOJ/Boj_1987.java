@@ -5,12 +5,11 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Boj_1987 {
-	// 70% 틀렸습니다.
 	static int[] dx= {1,0,-1,0};
 	static int[] dy = {0,1,0,-1};
 	static int r,c;
-	static char[][] arr;
-	static boolean[][] visited;
+	static boolean[] visited = new boolean[26];
+	static int[][] arr;
 	static int answer = 0;
 	public static void main(String[] args) throws Exception {
 
@@ -20,39 +19,41 @@ public class Boj_1987 {
 		r = Integer.parseInt(st.nextToken());
 		c = Integer.parseInt(st.nextToken());
 
-		arr = new char[r][c];
-		visited = new boolean[r][c];
+		arr = new int[r][c];
 
-		for ( int i= 0; i < r; i++ ){
-			arr[i] = br.readLine().toCharArray();
+		for( int i = 0; i < r; i++ ){
+			String temp = br.readLine();
+			for ( int j=0; j < c; j++ ){
+				arr[i][j] = temp.charAt(j)-'A';
+			}
 		}
 
-		dfs( 0, 0, 0,"" );
+		if ( r == 1 && c== 1 ){
+			System.out.println(1);
+			return;
+		}
+		dfs( 0, 0, 0 );
 		System.out.println(answer);
-	}
-	private static void dfs( int x , int y , int count , String now ){
 
-		char ch = arr[x][y];
-		if ( now.contains( String.valueOf(ch)) ) {
+	}
+	private static void dfs( int x, int y , int count ){
+
+		if( visited[ arr[x][y] ]  ){
 			answer = Math.max( answer , count );
 			return;
 		}
-		now += String.valueOf(ch);
 
-		for (int i=0; i < 4; i++ ){
+
+		visited[arr[x][y]] = true;
+		for (int i = 0; i < 4; i++) {
 			int nx = x + dx[i];
 			int ny = y + dy[i];
 
-			if ( nx < 0 || ny < 0 || nx >= r || ny >= c )
+			if (nx < 0 || ny < 0 || nx >= r || ny >= c)
 				continue;
-
-			if ( visited[nx][ny] )
-				continue;
-
-			visited[nx][ny] = true;
-			dfs( nx, ny, count+1 , now );
-			visited[nx][ny] = false;
+			dfs(nx, ny, count + 1);
 		}
+		visited[arr[x][y]] = false;
 
 	}
 }
