@@ -12,78 +12,73 @@ public class Boj_2615 {
 
 		int[][] arr = new int[19][19];
 
-		int[] dx = {1,0,1,1};
-		int[] dy = {0,1,1,-1};
+		int[] dx = {1,0,1,-1};
+		int[] dy = {0,1,1,1};
 
-		for ( int i=0;i < 19; i++ ){
+		// 세로 부터 해.
+		for( int i=0; i < 19; i++ ){
 			st = new StringTokenizer(br.readLine());
-			for ( int j=0;j < 19; j++ ){
+			for ( int j=0; j < 19; j ++ ){
 				arr[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 
-		for ( int j =0 ; j< 19; j++ ){
-			for ( int i=0; i < 19; i++ ){
 
-				if ( arr[i][j] == 0 )
+		for( int i=0; i < 19; i++ ){
+			for( int j= 0; j < 19; j ++ ){
+
+				if( arr[j][i] == 0 )
 					continue;
 
-				int dir = -1 ;
-				int nowStone = arr[i][j];
+				for( int d =0; d < 4; d ++ ){
 
-				for ( int d = 0; d< 4; d++ ){
+					int nx = j + dx[d];
+					int ny = i + dy[d];
 
-					int nx = i + dx[d];
-					int ny = j + dy[d];
-
-					if ( nx < 0 || ny < 0 || nx >= 19 || ny >= 19 )
+					if( nx < 0 || ny <0 || nx >= 19 || ny >= 19 || arr[nx][ny] != arr[j][i] )
 						continue;
-					if ( arr[nx][ny] == nowStone ){
-						dir = d;
-						break;
+
+					int count = 2;
+
+					while( true ){
+						nx += dx[d];
+						ny += dy[d];
+
+						if( nx < 0 || ny < 0 || nx >= 19 || ny >= 19 )
+							break;
+
+						if ( arr[nx][ny] == arr[j][i] )
+							count++;
+						else break;
 					}
-				}
-				if ( dir == -1 )
-					continue;
 
-				int x = i;
-				int y = j;
+					int exX = j-dx[d];
+					int exY = i-dy[d];
+					
+					boolean check = false;
 
-				int count = 0 ;
-				while( arr[x][y] == nowStone ) {
-					count++;
-					x += dx[dir];
-					y += dy[dir];
+					if ( 0 <= exX && exX < 19 && 0 <= exY && exY < 19 ){
+						if ( arr[exX][exY] == arr[j][i] )
+							check = true;
+					}
 
-					if ( x < 0 || y < 0 || x >= 19 || y >= 19 )
+					if ( check )
 						break;
-				}
 
-				int exX = i - dx[dir];
-				int exY = j - dy[dir];
-				if( exX >= 0 && exX< 19 && exY >=0 && exY < 19 && arr[exX][exY] == nowStone ){
-					continue;
-				}
+					if( count == 5 ){
 
-				if ( count == 5 ){
-					if( dir == 3 ){
-
-						i = x - dx[dir];
-						j = y - dy[dir];
+						System.out.println( arr[j][i] );
+						System.out.println((j+1)+" "+(i+1));
+						return;
+					}
 
 					}
-					System.out.println( arr[i][j] );
-					System.out.println( (i+1)+" "+ (j+1) );
-					return;
+
 				}
 
-
-
-			}
 		}
 
 		System.out.println(0);
-
 
 
 	}
