@@ -27,29 +27,20 @@ public class Boj_18511 {
 
 		Arrays.sort( arr );
 
-		search( "" );
+		search( 0  );
 		System.out.println(answer);
 	}
-	private static void search( String now  ){
+	private static void search( int now ){
 
-		if( 0 < now.length() && now.length() <=  length ){
+		if( now > n )
+			return;
 
-			if( Integer.parseInt( now ) > n )
-				return;
-
-			int tmp = Integer.parseInt( now );
-			if( Math.abs( tmp - n ) < Math.abs( n - answer ) ){
-				answer = tmp;
-			}
-
-			if ( now.length() == length)
-				return;
+		if( (n-now) < ( n -answer) ){
+			answer = now;
 		}
 
-		String temp = now;
-		for (int i=0; i < k; i ++ ){
-			now = temp ;
-			search( now + String.valueOf( arr[i] ) );
+		for ( int i=0; i< k; i++ ){
+			search( now*10 + arr[i] );
 		}
 
 	}
