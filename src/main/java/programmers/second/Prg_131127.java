@@ -13,7 +13,12 @@ public class Prg_131127 {
 		int[] number = {3, 2, 2, 2, 1};
 		String[] discount = {"chicken", "apple", "apple", "banana", "rice", "apple", "pork", "banana", "pork", "rice", "pot", "banana", "apple", "banana"};
 
+		String[] want2 = {"apple"};
+		int[] number2 = {10};
+		String[] discount2 = {"banana", "banana", "banana", "banana", "banana", "banana", "banana", "banana", "banana", "banana"};
+
 		System.out.println(sol.solution( want , number, discount ));
+		System.out.println(sol.solution( want2 , number2, discount2 ));
 	}
 	private static int solution(String[] want, int[] number, String[] discount) {
 
