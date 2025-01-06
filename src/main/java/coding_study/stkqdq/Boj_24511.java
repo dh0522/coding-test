@@ -32,13 +32,11 @@ public class Boj_24511 {
 		}
 
 		int m = Integer.parseInt(br.readLine());
-		int addOne = 0;
 
 		st = new StringTokenizer(br.readLine());
 		for( int i =0; i < m; i++ ){
-			addOne = Integer.parseInt(st.nextToken());
 
-			q.addFirst( addOne );
+			q.addFirst( Integer.parseInt(st.nextToken()) );
 			sb.append(q.pollLast()).append(" ");
 		}
 		System.out.println(sb);
