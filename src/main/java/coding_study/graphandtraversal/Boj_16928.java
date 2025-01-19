@@ -38,31 +38,24 @@ public class Boj_16928 {
 		Queue<Integer> q = new ArrayDeque<>();
 		int[] visited = new int[101];
 
-		Arrays.fill( visited,  100 );
-
 		q.add( 1 );
-		visited[1] = 0;
+		visited[1] = 1;
 
 		while( !q.isEmpty() ){
 			int now = q.poll();
 
-			if ( board[now] != 0 ){
-				next = board[now];
-				if( visited[next] < visited[now] + 1 )
-					continue;
-
-				visited[next] = visited[now] + 1;
-				q.add( next );
-				continue;
-			}
-
 			for ( int i =1; i <= 6; i++ ){
 
 				next = now + i;
+
 				if ( next > 100 )
 					continue;
 
-				if( visited[next] <= visited[now] + 1 )
+				if( board[next] != 0 ){
+					next = board[next];
+				}
+
+				if( visited[next] != 0 )
 					continue;
 
 				q.add( next );
@@ -70,7 +63,6 @@ public class Boj_16928 {
 			}
 
 		}
-
 		return visited[100]-1;
 	}
 }
