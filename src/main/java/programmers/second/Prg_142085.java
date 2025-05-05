@@ -10,30 +10,22 @@ public class Prg_142085 {
 	}
 
 	private int solution(int n, int k, int[] enemy) {
-		int answer = 0;
 		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
 
-		for(int i=0; i < enemy.length; i++){
-
+		for (int i = 0; i < enemy.length; i++) {
 			pq.add(enemy[i]);
 			n -= enemy[i];
 
-			if( n < 0 && k == 0 ){
-				break;
+			if (n < 0) {
+				if (k > 0) {
+					n += pq.poll();
+					k--;
+				} else {
+					return i;
+				}
 			}
-
-			if( n < 0 && k > 0 && ( pq.peek() + n >= 0 ) ){
-
-				k--;
-				n += pq.poll();
-
-			}
-
-
-			answer = i+1;
 		}
 
-
-		return answer;
+		return enemy.length;
 	}
 }
